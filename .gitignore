@@ -1,2 +1,4 @@
-catalog_service/node_modules
-catalog_service/dist
+coverage
+node_modules
+dist
+.DS_Store
