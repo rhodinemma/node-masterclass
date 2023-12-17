@@ -20,7 +20,7 @@ export class MockCatalogRepository implements ICatalogRepository {
         return Promise.resolve([]);
     }
     findOne(id: number): Promise<Product> {
-        throw new Error("Method not implemented.");
+        return Promise.resolve({ id } as unknown as Product)
     }
 
 }

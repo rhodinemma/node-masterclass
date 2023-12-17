@@ -116,4 +116,24 @@ describe("CatalogService", () => {
             await expect(service.getProducts(0, 0)).rejects.toThrow("products do not exist")
         })
     })
+
+    describe("getProduct", () => {
+        test("should get product by id", async () => {
+            const service = new CatalogService(repository)
+            const product = productFactory.build();
+
+            jest.spyOn(repository, "findOne").mockImplementationOnce(() => Promise.resolve(product))
+            const result = await service.getProduct(product.id!)
+
+            expect(result).toMatchObject(product)
+        })
+
+        test("should throw error when product does not exist", async () => {
+            const service = new CatalogService(repository)
+
+            jest.spyOn(repository, "findOne").mockImplementationOnce(() => Promise.reject(new Error("product does not exist")))
+
+            await expect(service.getProduct(0)).rejects.toThrow("product does not exist")
+        })
+    })
 })
