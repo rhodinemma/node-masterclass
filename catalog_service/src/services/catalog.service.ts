@@ -35,5 +35,9 @@ export class CatalogService {
         return product;
     }
 
-    deleteProduct(id: number) { }
+    async deleteProduct(id: number) {
+        const result = await this._repository.delete(id);
+        // delete record from Elastic Search
+        return result;
+    }
 }

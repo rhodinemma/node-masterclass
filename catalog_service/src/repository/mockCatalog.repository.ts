@@ -13,8 +13,8 @@ export class MockCatalogRepository implements ICatalogRepository {
     update(data: Product): Promise<Product> {
         return Promise.resolve(data as unknown as Product);
     }
-    delete(id: any): void {
-        throw new Error("Method not implemented.");
+    delete(id: any) {
+        return Promise.resolve(id);
     }
     find(limit: number, offset: number): Promise<Product[]> {
         return Promise.resolve([]);

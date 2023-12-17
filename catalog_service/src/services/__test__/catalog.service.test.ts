@@ -136,4 +136,16 @@ describe("CatalogService", () => {
             await expect(service.getProduct(0)).rejects.toThrow("product does not exist")
         })
     })
+
+    describe("deleteProduct", () => {
+        test("should delete product by id", async () => {
+            const service = new CatalogService(repository)
+            const product = productFactory.build();
+
+            jest.spyOn(repository, "delete").mockImplementationOnce(() => Promise.resolve({ id: product.id }))
+            const result = await service.deleteProduct(product.id!)
+
+            expect(result).toMatchObject({ id: product.id })
+        })
+    })
 })
