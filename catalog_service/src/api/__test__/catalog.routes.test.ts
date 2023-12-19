@@ -120,4 +120,29 @@ describe("Catalog Routes", () => {
             expect(response.body).toEqual("failed to get products")
         })
     })
+
+    describe("GET /products/:id", () => {
+        test("should return a product by id", async () => {
+
+            const product = ProductFactory.build()
+
+            jest.spyOn(catalogService, "getProduct").mockImplementationOnce(() => Promise.resolve(product))
+
+            const response = await request(app).get(`/products/${product.id}`).set("Accept", "application/json")
+
+            expect(response.status).toBe(200)
+            expect(response.body).toEqual(product)
+        })
+
+        test("should return internal error code 500", async () => {
+            const product = ProductFactory.build()
+
+            jest.spyOn(catalogService, "getProduct").mockImplementationOnce(() => Promise.reject(new Error("failed to get product")));
+
+            const response = await request(app).get(`/products/${product.id}`).set("Accept", "application/json")
+
+            expect(response.status).toBe(500)
+            expect(response.body).toEqual("failed to get product")
+        })
+    })
 })
