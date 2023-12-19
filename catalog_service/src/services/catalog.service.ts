@@ -32,6 +32,11 @@ export class CatalogService {
     // instead of this we will get product from Elastic Search
     async getProducts(limit: number, offset: number) {
         const products = await this._repository.find(limit, offset);
+
+        if (!products.length) {
+            throw new Error("failed to get products")
+        }
+
         return products;
     }
 

@@ -95,4 +95,29 @@ describe("Catalog Routes", () => {
             expect(response.body).toEqual("unable to update product")
         })
     })
+
+    describe("GET /products?limit=0&offset=0", () => {
+        test("should return a range of products by offset and limit", async () => {
+            const randomLimit = faker.number.int({ min: 10, max: 50 })
+            const products = ProductFactory.buildList(randomLimit)
+
+            jest.spyOn(catalogService, "getProducts").mockImplementationOnce(() => Promise.resolve(products))
+
+            const response = await request(app).get(`/products?limit=${randomLimit}&offset=0`).set("Accept", "application/json")
+
+            expect(response.status).toBe(200)
+            expect(response.body).toEqual(products)
+        })
+
+        test("should return internal error code 500", async () => {
+            const randomLimit = faker.number.int({ min: 10, max: 50 })
+
+            jest.spyOn(catalogService, "getProducts").mockImplementationOnce(() => Promise.reject(new Error("failed to get products")));
+
+            const response = await request(app).get(`/products?limit=${randomLimit}&offset=0`).set("Accept", "application/json")
+
+            expect(response.status).toBe(500)
+            expect(response.body).toEqual("failed to get products")
+        })
+    })
 })
