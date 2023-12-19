@@ -52,6 +52,11 @@ export class CatalogService {
 
     async deleteProduct(id: number) {
         const result = await this._repository.delete(id);
+
+        if (!result) {
+            throw new Error("failed to delete product")
+        }
+
         // delete record from Elastic Search
         return result;
     }
