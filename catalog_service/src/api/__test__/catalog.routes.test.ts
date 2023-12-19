@@ -39,5 +39,16 @@ describe("Catalog Routes", () => {
             expect(response.status).toBe(400)
             expect(response.body).toEqual("name should not be empty")
         })
+
+        test("should return internal error code 500", async () => {
+            const reqBody = mockRequest();
+
+            jest.spyOn(catalogService, "createProduct").mockImplementationOnce(() => Promise.reject(new Error("error occurred on creating product")))
+
+            const response = await request(app).post("/products").send(reqBody).set("Accept", "application/json")
+
+            expect(response.status).toBe(500)
+            expect(response.body).toEqual("error occurred on creating product")
+        })
     })
 })

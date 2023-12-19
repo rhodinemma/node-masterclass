@@ -10,13 +10,18 @@ export const catalogService = new CatalogService(new CatalogRepository());
 
 // endpoints
 router.post("/products", async (req: Request, res: Response, next: NextFunction) => {
-    const { errors, input } = await RequestValidator(CreateProductRequest, req.body);
+    try {
+        const { errors, input } = await RequestValidator(CreateProductRequest, req.body);
 
-    if (errors) return res.status(400).json(errors);
+        if (errors) return res.status(400).json(errors);
 
-    const data = await catalogService.createProduct(input);
+        const data = await catalogService.createProduct(input);
 
-    return res.status(201).json(data);
+        return res.status(201).json(data);
+    } catch (error) {
+        const err = error as Error
+        return res.status(500).json(err.message)
+    }
 })
 
 export default router;
