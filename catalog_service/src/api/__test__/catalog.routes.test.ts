@@ -43,12 +43,12 @@ describe("Catalog Routes", () => {
         test("should return internal error code 500", async () => {
             const reqBody = mockRequest();
 
-            jest.spyOn(catalogService, "createProduct").mockImplementationOnce(() => Promise.reject(new Error("error occurred on creating product")))
+            jest.spyOn(catalogService, "createProduct").mockImplementationOnce(() => Promise.reject(new Error("unable to create product")))
 
             const response = await request(app).post("/products").send(reqBody).set("Accept", "application/json")
 
             expect(response.status).toBe(500)
-            expect(response.body).toEqual("error occurred on creating product")
+            expect(response.body).toEqual("unable to create product")
         })
     })
 
@@ -81,6 +81,18 @@ describe("Catalog Routes", () => {
 
             expect(response.status).toBe(400)
             expect(response.body).toEqual("price must not be less than 1")
+        })
+
+        test("should return internal error code 500", async () => {
+            const product = ProductFactory.build();
+            const reqBody = mockRequest();
+
+            jest.spyOn(catalogService, "updateProduct").mockImplementationOnce(() => Promise.reject(new Error("unable to update product")));
+
+            const response = await request(app).patch(`/products/${product.id}`).send(reqBody).set("Accept", "application/json")
+
+            expect(response.status).toBe(500)
+            expect(response.body).toEqual("unable to update product")
         })
     })
 })
