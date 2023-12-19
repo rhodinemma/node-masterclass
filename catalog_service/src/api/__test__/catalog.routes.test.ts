@@ -52,7 +52,7 @@ describe("Catalog Routes", () => {
         })
     })
 
-    describe.only("PATCH /products/:id", () => {
+    describe("PATCH /products/:id", () => {
         test("should update product successfully", async () => {
             const product = ProductFactory.build();
             const reqBody = {
@@ -67,6 +67,20 @@ describe("Catalog Routes", () => {
 
             expect(response.status).toBe(200)
             expect(response.body).toEqual(product)
+        })
+
+        test("should return validation error 400", async () => {
+            const product = ProductFactory.build();
+            const reqBody = {
+                name: product.name,
+                price: -1,
+                stock: product.stock
+            }
+
+            const response = await request(app).patch(`/products/${product.id}`).send({ ...reqBody, price: -1 }).set("Accept", "application/json")
+
+            expect(response.status).toBe(400)
+            expect(response.body).toEqual("price must not be less than 1")
         })
     })
 })
