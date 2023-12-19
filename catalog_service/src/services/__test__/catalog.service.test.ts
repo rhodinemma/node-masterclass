@@ -4,13 +4,7 @@ import { MockCatalogRepository } from "../../repository/mockCatalog.repository"
 import { CatalogService } from "../catalog.service"
 import { faker } from "@faker-js/faker"
 import { Factory } from "rosie"
-
-const productFactory = new Factory<Product>()
-    .attr("id", faker.number.int({ min: 1, max: 1000 }))
-    .attr("name", faker.commerce.productName())
-    .attr("description", faker.commerce.productDescription())
-    .attr("stock", faker.number.int({ min: 0, max: 100 }))
-    .attr("price", +faker.commerce.price())
+import { ProductFactory } from "../../utils/fixtures"
 
 const mockProduct = (rest: any) => {
     return {
@@ -99,7 +93,7 @@ describe("CatalogService", () => {
         test("should get products by offset and limit", async () => {
             const service = new CatalogService(repository)
             const randomLimit = faker.number.int({ min: 10, max: 50 })
-            const products = productFactory.buildList(randomLimit)
+            const products = ProductFactory.buildList(randomLimit)
 
             jest.spyOn(repository, "find").mockImplementationOnce(() => Promise.resolve(products))
             const result = await service.getProducts(randomLimit, 0)
@@ -120,7 +114,7 @@ describe("CatalogService", () => {
     describe("getProduct", () => {
         test("should get product by id", async () => {
             const service = new CatalogService(repository)
-            const product = productFactory.build();
+            const product = ProductFactory.build();
 
             jest.spyOn(repository, "findOne").mockImplementationOnce(() => Promise.resolve(product))
             const result = await service.getProduct(product.id!)
@@ -140,7 +134,7 @@ describe("CatalogService", () => {
     describe("deleteProduct", () => {
         test("should delete product by id", async () => {
             const service = new CatalogService(repository)
-            const product = productFactory.build();
+            const product = ProductFactory.build();
 
             jest.spyOn(repository, "delete").mockImplementationOnce(() => Promise.resolve({ id: product.id }))
             const result = await service.deleteProduct(product.id!)
